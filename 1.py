@@ -58,7 +58,7 @@ def Courses(sqlite_connection, entities):
     cursorObj.execute('INSERT INTO Courses(id, name, time_start, time_end) VALUES(?, ?, ?, ?)', entities)
 
     sqlite_connection.commit()
-
+#autoincrement!!!!!!
 
 def Student_courses(sqlite_connection, entities):
     cursorObj = sqlite_connection.cursor()
@@ -80,16 +80,13 @@ def Elder_30(sqlite_connection):
 
 
 def List_of_py_students(sqlite_connection):
-    cursorId = sqlite_connection.cursor()
+    cursorCourse = sqlite_connection.cursor()
     cursorName = sqlite_connection.cursor()
-
-    cursorId.execute('SELECT student_id FROM Student_courses WHERE course_id = 1')
-
-    id_from_courses = cursorId.fetchall()
-    cursorName.execute('SELECT name FROM Students WHERE id in (2, 3)')
-
+    cursorName.execute("SELECT \
+                        Students.name, Student_courses.course_id \
+                        FROM Student_courses \
+                        JOIN Students ON Students.id = Student_courses.student_id")
     rows = cursorName.fetchall()
-
     for row in rows:
         print(row)
 
@@ -111,14 +108,6 @@ Student_courses(sqlite_connection, (3, 3, 1))
 Student_courses(sqlite_connection, (4, 4, 2))
 '''
 cursor0 = sqlite_connection.cursor()
-print("Data from Students")
-for i in cursor0.execute("SELECT * FROM Students"):
-    print(i)
-print("Data from Courses")
-for i in cursor0.execute("SELECT * FROM Courses"):
-    print(i)
-print("Data from Student_courses")
-for i in cursor0.execute("SELECT * FROM Student_courses"):
-    print(i)
 List_of_py_students(sqlite_connection)
 sqlite_connection.close()
+#join !!!
