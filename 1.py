@@ -79,16 +79,41 @@ def Elder_30(sqlite_connection):
         print(row)
 
 
-def List_of_py_students(sqlite_connection):
-    cursorCourse = sqlite_connection.cursor()
-    cursorName = sqlite_connection.cursor()
-    cursorName.execute("SELECT \
-                        Students.name, Student_courses.course_id \
-                        FROM Student_courses \
-                        JOIN Students ON Students.id = Student_courses.student_id")
-    rows = cursorName.fetchall()
+def get_students_in_python_course(sqlite_connection):
+    cursor = sqlite_connection.cursor()
+
+    query = '''
+    SELECT s.id, s.name, s.surname, s.age, s.city
+    FROM Students s
+    JOIN Student_courses sc ON s.id = sc.student_id
+    JOIN Courses c ON sc.course_id = c.id
+    WHERE c.name = 'python'
+    '''
+
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
     for row in rows:
         print(row)
+
+
+def get_students_in_python_course_and_from_Spb(sqlite_connection):
+    cursor = sqlite_connection.cursor()
+
+    query = '''
+    SELECT Students.name, Students.surname
+    FROM Students
+    JOIN Student_courses ON Students.id = Student_courses.student_id
+    JOIN Courses ON Student_courses.course_id = Courses.id
+    WHERE Courses.name = 'python' AND Students.city = 'Spb'
+    '''
+
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    for row in rows:
+        print(row)
+
 
 
 sqlite_connection = sql_connection()
@@ -108,6 +133,7 @@ Student_courses(sqlite_connection, (3, 3, 1))
 Student_courses(sqlite_connection, (4, 4, 2))
 '''
 cursor0 = sqlite_connection.cursor()
-List_of_py_students(sqlite_connection)
+get_students_in_python_course(sqlite_connection)
+get_students_in_python_course_and_from_Spb(sqlite_connection)
 sqlite_connection.close()
 #join !!!
